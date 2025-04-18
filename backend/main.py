@@ -1,19 +1,15 @@
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 import spacy
-import pdfminer.high_level
-import docx2txt
-import io
 import logging
-from sklearn.feature_extraction.text import TfidfVectorizer
-import openai
-import os
-from backend.ats_analysis import analyze_resume
-import pdfplumber
-import docx
 from dotenv import load_dotenv
+import os
+import cohere
+from backend.ats_analysis import analyze_resume
 
-load_dotenv() 
+load_dotenv()
+os.environ["CO_API_KEY"] = os.getenv("COHERE_API_KEY")  # manually set it
+co = cohere.Client(os.getenv("COHERE_API_KEY"))
 
 app = FastAPI(title="ATS Analyzer API", docs_url="/docs", redoc_url="/redoc")
 
@@ -26,75 +22,68 @@ app.add_middleware(
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 nlp = spacy.load("en_core_web_sm")
 
-openai.api_key = os.getenv("OPENAI_API_KEY") 
-
-async def extract_text(file: UploadFile) -> str:
+def improve_resume(resume_text: str, job_description: str) -> str:
     try:
-        file_bytes = await file.read()
-        file_stream = io.BytesIO(file_bytes)
-        if file.filename.endswith(".pdf"):
-            return pdfminer.high_level.extract_text(file_stream)
-        elif file.filename.endswith(".docx"):
-            return docx2txt.process(file_stream)
-        else:
-            return "Error: Unsupported file format"
-    except Exception as e:
-        logger.exception("Error processing uploaded file")
-        return f"Error processing file: {str(e)}"
+        prompt = f"""
+You are a resume optimization assistant for ATS systems.
 
-def extract_text_from_file(file_path):
-    if file_path.endswith(".pdf"):
-        with pdfplumber.open(file_path) as pdf:
-            return "\n".join(page.extract_text() for page in pdf.pages if page.extract_text())
-    elif file_path.endswith(".docx"):
-        doc = docx.Document(file_path)
-        return "\n".join([para.text for para in doc.paragraphs])
-    else:
-        raise ValueError("Unsupported file format")
+Given this RESUME:
+---------------------
+{resume_text[:3000]}
+---------------------
 
-def improve_resume(text: str) -> str:
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "Improve the resume text for ATS compatibility."},
-                {"role": "user", "content": text}
-            ]
+And this JOB DESCRIPTION:
+---------------------
+{job_description}
+---------------------
+
+👉 Rewrite the resume's key achievements in **bullet-point format** that:
+- Uses action verbs
+- Aligns with the job keywords
+- Emphasizes impact and measurable results
+- Is optimized for ATS systems
+
+✅ Output 5–8 improved bullet points. Do NOT repeat the same text. Rewrite meaningfully.
+"""
+        response = co.generate(
+            model="command",
+            prompt=prompt.strip(),
+            max_tokens=350,
+            temperature=0.6
         )
-        return response["choices"][0]["message"]["content"]
+        return response.generations[0].text.strip()
     except Exception as e:
-        logger.exception("OpenAI resume improvement failed")
+        logger.exception("Cohere resume improvement failed")
         return f"Error improving resume: {str(e)}"
 
-def match_job_description(resume_text: str, job_description: str) -> float:
-    try:
-        corpus = [resume_text, job_description]
-        vectorizer = TfidfVectorizer().fit_transform(corpus)
-        similarity = (vectorizer * vectorizer.T).toarray()
-        return float(similarity[0][1])
-    except Exception as e:
-        logger.exception("TF-IDF similarity failed")
-        return 0.0
-
-@app.post("/match")
-async def match_resume(file: UploadFile = File(...), job_description: str = ""):
-    resume_text = await extract_text(file)
-    if resume_text.startswith("Error"):
-        return {"error": resume_text}
-    score = match_job_description(resume_text, job_description)
-    return {"match_score": score}
 
 @app.post("/analyze")
 async def analyze_resume_api(file: UploadFile = File(...), job_description: str = Form(...)):
-    text = await extract_text(file)
-    if text.startswith("Error"):
-        return {"error": text}
     try:
-        result = analyze_resume(text, job_description)
-        return result
+        file_bytes = await file.read()
+        filename = file.filename
+
+        score, feedback = analyze_resume(file_bytes, job_description, filename)
+        resume_text = feedback["resume_text"]
+
+        suggestion_prompt = (
+            f"Resume:\n{resume_text[:3000]}\n\n"
+            f"Job Description:\n{job_description}\n\n"
+            f"Suggest improvements to this resume to increase alignment with the job posting. "
+            f"Focus on keyword inclusion, clarity, and ATS-optimized formatting."
+        )
+
+        suggestions = improve_resume(resume_text, job_description)
+
+        return {
+            "ATS Match Score": f"{score:.2f}%",
+            "Matched Keywords": feedback["matched_keywords"],
+            "Missing Keywords (Consider adding these)": feedback["missing_keywords"],
+            "Suggestions": suggestions
+        }
+
     except Exception as e:
         logger.exception("Resume analysis failed")
         return {"error": f"Analysis failed: {str(e)}"}

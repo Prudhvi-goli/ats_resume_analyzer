@@ -37,6 +37,7 @@
 | NLP & AI     | SpaCy, NLTK, scikit-learn, OpenAI API|
 | Parsing      | pdfminer, python-docx, pdfplumber    |
 | Others       | Python, Git, VS Code, dotenv         |
+<<<<<<< HEAD
 
 ---
 
@@ -143,15 +144,109 @@ This project is licensed under the [MIT License](LICENSE).
 💻 [GitHub](https://github.com/Prudhvi-goli)
 
 ---
+=======
+>>>>>>> dd0f4fd (🚀 Final working version with Docker support, NLTK, and API fixes)
 
-### 📊 Sample Output
+---
+
+### 📁 Project Structure
 
 ```
-Resume Match Score: 82%
-Top Missing Keywords: ['Kubernetes', 'NLP', 'CI/CD']
-Suggestions: Add more detail on your project involving Docker and ML pipelines.
+ats_resume_analyzer/
+├── backend/
+│   └── main.py            # FastAPI backend
+│   └── ats_analysis.py    # Keyword extraction + scoring
+├── frontend/
+│   └── ui.py              # Streamlit UI
+├── .env.example           # Environment variable template
+├── requirements.txt       # Dependencies
+├── README.md              # Project overview
 ```
 
-### 💡 Why I Built This
+---
 
-I wanted to bridge the gap between generic resumes and tailored applications by helping users understand how their resume stacks up—just like an ATS system would. I built this from scratch using only open-source tools and the OpenAI API.
+### ⚙️ Setup & Installation
+
+#### 1. Clone the Repository
+
+```bash
+git clone https://github.com/Prudhvi-goli/ats_resume_analyzer.git
+cd ats_resume_analyzer
+```
+
+#### 2. Create Virtual Environment
+
+```bash
+python -m venv myvenv
+source myvenv/bin/activate        # Linux/Mac
+myvenv\Scripts\activate           # Windows
+```
+
+#### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+#### 4. Add Your `.env` File
+
+Create a file named `.env` in the root folder:
+
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+---
+
+### 🚦 How to Run
+
+#### Start the Backend API (FastAPI)
+```bash
+uvicorn backend.main:app --reload
+```
+
+#### Start the Frontend UI (Streamlit)
+```bash
+streamlit run frontend/ui.py
+```
+
+---
+
+### 🧪 Example Job Description Input
+> Paste a JD in the input area like this:
+
+```text
+We are hiring a Python backend engineer with experience in FastAPI, NLP, and OpenAI APIs to build scalable AI products. Knowledge of ATS is a bonus.
+```
+
+---
+
+### ✅ Output
+
+- Extracted Resume Keywords
+- Missing Keywords
+- ATS Match Score (e.g., `78%`)
+- Optional AI Suggestions for improvements
+
+---
+
+### 📌 Future Improvements
+
+- Support for multiple job descriptions
+- UI enhancements with theme customization
+- Export ATS analysis as PDF
+- Add login/user profiles
+
+---
+
+### 📝 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+### 👤 Author
+
+**Goli Prudhvi**  
+🔗 [LinkedIn](https://www.linkedin.com/in/prudhvi-goli/)  
+💻 [GitHub](https://github.com/Prudhvi-goli)

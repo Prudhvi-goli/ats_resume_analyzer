@@ -7,8 +7,9 @@ from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 import pdfplumber
 import docx
-nltk.data.path.append("C:/Users/prudh/nltk_data")
+from io import BytesIO
 
+nltk.data.path.append("C:/Users/prudh/nltk_data")  # Update path if needed
 
 def clean_text(text):
     text = re.sub(r'[^a-zA-Z0-9\s]', '', text.lower())
@@ -28,30 +29,23 @@ def calculate_match(resume_keywords, job_keywords):
     missing_keywords = sorted(job_set - resume_set)
     return match_percentage, sorted(matched), missing_keywords
 
-def extract_text_from_file(file_path):
-    if file_path.endswith(".pdf"):
-        with pdfplumber.open(file_path) as pdf:
+def extract_text_from_resume(file_bytes, filename):
+    if filename.lower().endswith(".pdf"):
+        with pdfplumber.open(BytesIO(file_bytes)) as pdf:
             return "\n".join(page.extract_text() for page in pdf.pages if page.extract_text())
-    elif file_path.endswith(".docx"):
-        doc = docx.Document(file_path)
+    elif filename.lower().endswith(".docx"):
+        doc = docx.Document(BytesIO(file_bytes))
         return "\n".join([para.text for para in doc.paragraphs])
     else:
         raise ValueError("Unsupported file format")
 
-def analyze_resume(resume_text: str, job_description: str) -> dict:
+def analyze_resume(file_bytes, job_description, filename):
+    resume_text = extract_text_from_resume(file_bytes, filename)
     resume_keywords = extract_keywords(resume_text)
     job_keywords = extract_keywords(job_description)
     match_score, matched, missing = calculate_match(resume_keywords, job_keywords)
-    return {
-        "ATS Match Score": f"{match_score:.2f}%",
-        "Matched Keywords": matched,
-        "Missing Keywords (Consider adding these)": missing,
+    return match_score, {
+        "matched_keywords": matched,
+        "missing_keywords": missing,
+        "resume_text": resume_text  # ✅ Added for use in suggestions
     }
-
-if __name__ == "__main__":
-    resume_text = input("Paste your resume text: ")
-    job_description = input("Paste the job description: ")
-    result = analyze_resume(resume_text, job_description)
-    print(f"\nATS Match Score: {result['ATS Match Score']}")
-    print("\nMatched Keywords:", ', '.join(result['Matched Keywords']))
-    print("\nMissing Keywords (Consider adding these):", ', '.join(result['Missing Keywords (Consider adding these)']))
