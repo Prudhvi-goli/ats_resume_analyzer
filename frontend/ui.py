@@ -16,7 +16,7 @@ if st.button("Analyze") and resume_file and job_description:
     with st.spinner("Analyzing..."):
         try:
             files = {
-                "resume": (resume_file.name, resume_file, resume_file.type or "application/octet-stream")
+                "file": (resume_file.name, resume_file, resume_file.type or "application/octet-stream")
             }
             data = {
                 "job_description": job_description
