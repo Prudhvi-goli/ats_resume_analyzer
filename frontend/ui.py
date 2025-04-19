@@ -16,7 +16,7 @@ if st.button("Analyze") and resume_file and job_description:
     with st.spinner("Analyzing..."):
         try:
             files = {
-                "resume": (resume_file.name, resume_file, resume_file.type)
+                "resume": (resume_file.name, resume_file, resume_file.type or "application/octet-stream")
             }
             data = {
                 "job_description": job_description
@@ -27,12 +27,18 @@ if st.button("Analyze") and resume_file and job_description:
             result = response.json()
 
             st.success("✅ Analysis Complete!")
-            st.subheader("📌 Keywords Match")
-            st.write(", ".join(result["keywords"]))
 
-            st.subheader("💡 Tips")
-            for tip in result["tips"]:
-                st.markdown(f"- {tip}")
+            st.subheader("📌 ATS Match Score")
+            st.write(result.get("ATS Match Score", "N/A"))
+
+            st.subheader("📌 Matched Keywords")
+            st.write(", ".join(result.get("Matched Keywords", [])))
+
+            st.subheader("❌ Missing Keywords (Consider adding)")
+            st.write(", ".join(result.get("Missing Keywords (Consider adding these)", [])))
+
+            st.subheader("💡 Suggestions")
+            st.markdown(result.get("Suggestions", "No suggestions available."))
 
         except Exception as e:
             st.error(f"❌ Request failed: {e}")
