@@ -2,7 +2,7 @@ import os
 import streamlit as st
 import requests
 
-API_URL = os.getenv("CO_API_URL", "http://localhost:8000/analyze")  # fallback for local dev
+API_URL = os.getenv("API_URL", "http://localhost:8000/analyze")  # fallback for local dev
 
 st.set_page_config(page_title="ATS Resume Analyzer", layout="centered")
 st.title("📄 ATS Resume Analyzer")
