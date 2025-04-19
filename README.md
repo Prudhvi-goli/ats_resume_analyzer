@@ -1,157 +1,157 @@
 ## 📄 ATS Resume Analyzer
 
-**ATS Resume Analyzer** is an AI-powered web application that helps job seekers optimize their resumes by extracting relevant keywords, matching job descriptions, and suggesting improvements — all while simulating real-world Applicant Tracking Systems (ATS) used by companies.
+**ATS Resume Analyzer** is a full-stack AI-powered application that helps job seekers optimize their resumes by evaluating job match, extracting relevant keywords, and suggesting impactful improvements — simulating how real-world Applicant Tracking Systems (ATS) work.
 
 ![Python](https://img.shields.io/badge/python-3.10-blue)
 ![Streamlit](https://img.shields.io/badge/built%20with-streamlit-orange)
 ![FastAPI](https://img.shields.io/badge/api-fastapi-green)
+![Cohere](https://img.shields.io/badge/powered%20by-cohere-purple)
 ![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen)
-![OpenAI](https://img.shields.io/badge/powered%20by-openai-ff69b4)
 
 ---
 
-### 🚀 Features
+### 🚀 Key Features
 
-- 📄 **Resume Parser**: Supports both `.pdf` and `.docx` formats
-- 🧠 **Keyword Extraction**: NLP-based keyword extraction from resume
-- 🧾 **Job Match Score**: Calculates similarity between resume and job description
-- 💡 **ATS Optimization Tips**: Highlights missing keywords
-- 🤖 **AI Suggestions**: Optionally integrates with OpenAI to suggest resume improvements
-- 🌐 **Streamlit UI**: Simple, elegant, interactive user interface
-- ⚡ **FastAPI Backend**: Handles resume processing and keyword analysis
+- 📄 **Smart Resume Parser**: Parses `.pdf` and `.docx` resumes with support for modern formats
+- 🧠 **Keyword Extraction Engine**: Uses NLP (SpaCy + NLTK + scikit-learn) for precision keyword targeting
+- 📊 **ATS Match Score**: Calculates similarity between resume and job description based on real ATS logic
+- 💡 **Keyword Gap Analysis**: Highlights missing skills/phrases recruiters expect
+- ✍️ **Cohere-Powered Suggestions**: AI suggests 5–8 bullet-pointed improvements for better impact
+- ⚡ **FastAPI Backend**: Lightweight and production-ready REST API
+- 🌐 **Streamlit Frontend**: Polished user interface that’s interactive and mobile-friendly
+- 🐳 **Dockerized Deployment**: One-command containerization for portability
 
 ---
 
 ## 🔗 Live Demo
-- 🧠 [FastAPI Backend (Render)](https://ats-resume-analyzer-backend.onrender.com/docs)
-- 🎨 [Frontend (Streamlit)](https://your-streamlit-app.streamlit.app)
 
----
-### Features:
-
--Resume parsing from PDF/DOCX
--Job description matching
--Keyword analysis
--Cohere-powered resume improvement suggestions
--Dockerized backend (deployable anywhere)
-
-### Deployment instructions:
-
-```bash
-Copy code
-docker build -t ats-analyzer .
-docker run -d -p 8000:8000 --env-file .env ats-analyzer
-```
----
-### 🛠️ Tech Stack
-
-| Layer        | Tools Used                           |
-|--------------|---------------------------------------|
-| Frontend     | Streamlit                            |
-| Backend/API  | FastAPI, Uvicorn                     |
-| NLP & AI     | SpaCy, NLTK, scikit-learn, OpenAI API|
-| Parsing      | pdfminer, python-docx, pdfplumber    |
-| Others       | Python, Git, VS Code, dotenv         |
-<<<<<<< HEAD
+- 🧠 [FastAPI Backend (Render)](https://ats-resume-analyzer-backend.onrender.com)
+- 🎨 [Frontend (Streamlit)](https://atsresumeanalyzer-hsg3k9omj4yppd4gll3aef.streamlit.app/)
 
 ---
 
-### 📁 Project Structure
+## 🛠️ Tech Stack
+
+| Layer        | Tools Used                               |
+|--------------|-------------------------------------------|
+| Frontend     | Streamlit                                |
+| Backend/API  | FastAPI, Uvicorn                         |
+| NLP & AI     | SpaCy, NLTK, scikit-learn, Cohere API    |
+| File Parsing | pdfplumber, python-docx                  |
+| Deployment   | Docker, Render, Streamlit Cloud          |
+
+---
+
+## 📁 Project Structure
 
 ```
 ats_resume_analyzer/
 ├── backend/
-│   └── main.py            # FastAPI backend
-│   └── ats_analysis.py    # Keyword extraction + scoring
+│   ├── main.py           # FastAPI backend
+│   └── ats_analysis.py   # Keyword extraction + scoring
 ├── frontend/
-│   └── ui.py              # Streamlit UI
-├── .env.example           # Environment variable template
-├── requirements.txt       # Dependencies
-├── README.md              # Project overview
+│   └── ui.py             # Streamlit UI
+├── .env.example          # Environment variable template
+├── Dockerfile            # Containerization setup
+├── requirements.txt      # Dependencies
+├── README.md             # Project overview
 ```
 
 ---
 
-### ⚙️ Setup & Installation
+## ⚙️ Setup & Installation
 
-#### 1. Clone the Repository
-
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/Prudhvi-goli/ats_resume_analyzer.git
 cd ats_resume_analyzer
 ```
 
-#### 2. Create Virtual Environment
-
+### 2. Create Virtual Environment
 ```bash
 python -m venv myvenv
-source myvenv/bin/activate        # Linux/Mac
-myvenv\Scripts\activate           # Windows
+# Linux/macOS:
+source myvenv/bin/activate
+# Windows:
+myvenv\Scripts\activate
 ```
 
-#### 3. Install Dependencies
-
+### 3. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 4. Add Your `.env` File
-
-Create a file named `.env` in the root folder:
-
+### 4. Add Your `.env` File
 ```env
-CONERE_API_KEY=your_conere_api_key_here
+COHERE_API_KEY=your_cohere_api_key_here
 ```
+
 ---
 
-### 🚦 How to Run
+## 🐳 Docker Deployment
+```bash
+docker build -t ats-analyzer .
+docker run -d -p 8000:8000 --env-file .env ats-analyzer
+```
 
-#### Start the Backend API (FastAPI)
+---
+
+## 🚦 How to Run Locally
+
+### Start Backend
 ```bash
 uvicorn backend.main:app --reload
 ```
 
-#### Start the Frontend UI (Streamlit)
+### Start Frontend
 ```bash
 streamlit run frontend/ui.py
 ```
 
 ---
 
-### 🧪 Example Job Description Input
-> Paste a JD in the input area like this:
-
+## 🧪 Sample Job Description Input
 ```text
-We are hiring a Python backend engineer with experience in FastAPI, NLP, and OpenAI APIs to build scalable AI products. Knowledge of ATS is a bonus.
+We are hiring a Python backend engineer with experience in FastAPI, NLP, and Cohere APIs to build scalable AI products. Knowledge of ATS is a bonus.
 ```
 
 ---
 
-### ✅ Output
-
-- Extracted Resume Keywords
-- Missing Keywords
-- ATS Match Score (e.g., `78%`)
-- Optional AI Suggestions for improvements
-
----
-
-### 📌 Future Improvements
-
-- Support for multiple job descriptions
-- UI enhancements with theme customization
-- Export ATS analysis as PDF
-- Add login/user profiles
+## ✅ Output Sample
+- **Matched Keywords**
+- **Missing Keywords**
+- **ATS Score** (e.g., 82%)
+- **Suggested Resume Improvements**
 
 ---
 
-### 📝 License
+## 🌟 Highlights for Recruiters
+
+- Built with **production-ready backend (FastAPI)** and **interactive frontend (Streamlit)**
+- Fully **Dockerized** for cloud deployment in CI/CD workflows
+- Utilizes **NLP + AI** for real-time resume intelligence
+- Demonstrates ability to integrate **third-party APIs (Cohere)**
+- Clear separation of concerns (UI/API/NLP modules)
+- ⚡ Fast, functional, and ready for **real users**
+
+---
+
+## 📌 Future Roadmap
+
+- [ ] Support for multiple job descriptions
+- [ ] Export analysis reports as PDF
+- [ ] Enhanced UI themes + dark mode
+- [ ] Add user authentication + history tracking
+
+---
+
+## 📝 License
 
 This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-### 👤 Author
+## 👤 Author
 
 **Goli Prudhvi**  
 🔗 [LinkedIn](https://www.linkedin.com/in/prudhvi-goli/)  
