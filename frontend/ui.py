@@ -1,5 +1,8 @@
+import os
 import streamlit as st
 import requests
+
+API_URL = os.getenv("CO_API_URL", "http://localhost:8000/analyze")  # fallback for local dev
 
 st.set_page_config(page_title="ATS Resume Analyzer", layout="centered")
 st.title("📄 ATS Resume Analyzer")
@@ -14,7 +17,7 @@ if uploaded_file and job_description:
     with st.spinner("🔍 Analyzing your resume..."):
         try:
             response = requests.post(
-                "http://host.docker.internal:8000/analyze",  # ✅ This works from Windows to Docker
+                API_URL,
                 files={"file": uploaded_file},
                 data={"job_description": job_description}
             )
@@ -25,10 +28,8 @@ if uploaded_file and job_description:
                 else:
                     st.success("✅ Analysis Complete")
 
-                    # Score
                     st.metric("📊 ATS Match Score", data["ATS Match Score"])
 
-                    # Matched & missing keywords
                     col1, col2 = st.columns(2)
                     with col1:
                         st.markdown("### ✅ Matched Keywords")
@@ -37,7 +38,6 @@ if uploaded_file and job_description:
                         st.markdown("### ❌ Missing Keywords")
                         st.code(", ".join(data["Missing Keywords (Consider adding these)"]), language="text")
 
-                    # GPT suggestions
                     if "Suggestions" in data:
                         st.markdown("### 💡 AI-Powered Resume Suggestions")
                         st.info(data["Suggestions"])
