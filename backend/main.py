@@ -8,7 +8,6 @@ import cohere
 from backend.ats_analysis import analyze_resume
 
 load_dotenv()
-os.environ["CO_API_KEY"] = os.getenv("COHERE_API_KEY")  # manually set it
 co = cohere.Client(os.getenv("COHERE_API_KEY"))
 
 app = FastAPI(title="ATS Analyzer API", docs_url="/docs", redoc_url="/redoc")
