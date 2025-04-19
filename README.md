@@ -22,12 +22,27 @@
 
 ---
 
-### 📸 Screenshots
-
-> Add screenshots here if available (optional)
+## 🔗 Live Demo
+- 🧠 [FastAPI Backend (Render)](https://ats-resume-analyzer-backend.onrender.com/docs)
+- 🎨 [Frontend (Streamlit)](https://your-streamlit-app.streamlit.app)
 
 ---
+### Features:
 
+-Resume parsing from PDF/DOCX
+-Job description matching
+-Keyword analysis
+-Cohere-powered resume improvement suggestions
+-Dockerized backend (deployable anywhere)
+
+### Deployment instructions:
+
+```bash
+Copy code
+docker build -t ats-analyzer .
+docker run -d -p 8000:8000 --env-file .env ats-analyzer
+```
+---
 ### 🛠️ Tech Stack
 
 | Layer        | Tools Used                           |
