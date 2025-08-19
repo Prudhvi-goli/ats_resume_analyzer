@@ -38,13 +38,13 @@ And this JOB DESCRIPTION:
 {job_description}
 ---------------------
 
-👉 Rewrite the resume's key achievements in **bullet-point format** that:
+Rewrite the resume's key achievements in **bullet-point format** that:
 - Uses action verbs
 - Aligns with the job keywords
 - Emphasizes impact and measurable results
 - Is optimized for ATS systems
 
-✅ Output 5–8 improved bullet points. Do NOT repeat the same text. Rewrite meaningfully.
+Output 5–8 improved bullet points. Do NOT repeat the same text. Rewrite meaningfully.
 """
         response = co.generate(
             model="command",
