@@ -47,5 +47,5 @@ def analyze_resume(file_bytes, job_description, filename):
     return match_score, {
         "matched_keywords": matched,
         "missing_keywords": missing,
-        "resume_text": resume_text  # ✅ Added for use in suggestions
+        "resume_text": resume_text  # Added for use in suggestions
     }
